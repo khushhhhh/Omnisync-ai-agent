@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { SparklesIcon, Menu01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 
@@ -35,9 +36,9 @@ export default function Navbar() {
         >
           Sign In
         </a>
-        <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-semibold text-sm transition-all shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 cursor-pointer">
+        <Link href="/dashboard" className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-semibold text-sm transition-all shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 cursor-pointer">
           Launch App
-        </button>
+        </Link>
       </div>
 
       {/* Mobile Toggle */}
@@ -88,12 +89,13 @@ export default function Navbar() {
             >
               Sign In
             </a>
-            <button 
+            <Link 
+              href="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-semibold text-sm shadow-lg shadow-emerald-500/25 cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-semibold text-sm shadow-lg shadow-emerald-500/25 cursor-pointer text-center"
             >
               Launch App
-            </button>
+            </Link>
           </div>
         </div>
       )}

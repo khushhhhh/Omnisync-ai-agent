@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { 
   SparklesIcon, 
@@ -60,10 +61,10 @@ export default function Hero() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <button className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-semibold text-sm transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 flex items-center justify-center gap-2 cursor-pointer">
+          <Link href="/dashboard" className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-semibold text-sm transition-all shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/30 flex items-center justify-center gap-2 cursor-pointer">
             Connect Integrations
             <HugeiconsIcon icon={ArrowRight01Icon} size={16} />
-          </button>
+          </Link>
           <button className="w-full sm:w-auto px-6 py-3.5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900/80 active:scale-95 text-slate-300 hover:text-slate-100 font-semibold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer">
             <HugeiconsIcon icon={PlayIcon} size={14} className="text-emerald-400" />
             Watch Product Demo

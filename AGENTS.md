@@ -41,6 +41,20 @@ You are a Principal Next.js 15 Full-Stack & UI/UX Architect. You write pristine,
 - [x] Build sticky sidebar & glassmorphic dashboard shell (`/dashboard`)
 - [x] Connection modal cards for Telegram, WhatsApp, Gmail, and Outlook
 - [x] Live visual status indicators (Connected / Listening / Disconnected)
+- [x] Implement WhatsApp Connection Modal & Settings Panel (supports simple SENT_DM_API_KEY environment variable validation check)
+- [x] Create a clean REST-based WhatsApp gateway service utilizing the Sent.dm API (implemented in `/lib/whatsapp.ts`, deprecated socket-based `baileys.ts`)
+- [x] Generate `/api/whatsapp/connect` API endpoint supporting GET/POST to validate the configured `SENT_DM_API_KEY` (`/app/api/whatsapp/connect/route.ts`)
+- [x] Build 'Dashboard + AI Daily Brief' layout with top stats cards ('Important', 'Priority', 'Follow-ups')
+- [x] Implement client-side simulated connection flows for all four dock applications to highlight active/inactive states
+- [x] Add header 'Refresh' action simulating AI daily brief database updates and dynamic stats adjustments
+- [x] Evolve layout into a 'Neural Command Center' with an interactive Action Items checklist and scrollable daily summary feed (`/components/dashboard/DailyBrief.tsx`)
+- [x] Implement 'useBrief' hook (`/hooks/useBrief.ts`) managing tasks, toggles, and dynamic 'AI Proactive Insights' layer
+- [x] Add Priority (red-glow) and Important (blue-glow) styles to tasks, alongside checkmark strike-through and animate-out timers
+- [x] Create `/api/gmail` API bridge route supporting Google OAuth2 flows and fallback datasets (`/app/api/gmail/route.ts`)
+- [x] Update 'DailyBrief.tsx' to fetch high-priority email threads on mount and dynamically map them as workspace summaries and checkable action items
+- [x] Setup Google Consent OAuth2 authentication client config parser in `/lib/google-auth.ts` referencing credentials.json
+- [x] Add code-exchange Google callback API route `/api/auth/callback/google` saving tokens securely in `.gmail_tokens.json`
+- [x] Inject Google Authenticate CTA dialog inside 'DailyBrief.tsx' if token caches are unauthenticated or missing
 
 ### Phase 4: Agentic Webhook Listeners
 - [ ] Create Next.js API Webhook receivers (`/api/webhook/telegram`)
