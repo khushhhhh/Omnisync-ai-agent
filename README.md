@@ -1,3 +1,11 @@
+# OmniSync.ai - Agentic Executive OS
+
+OmniSync.ai is a distributed AI agent orchestrator and pipeline system. It automates cross-platform workflows, handles Google OAuth natively, offers a real-time Telegram webhook bridge, and maintains persistent cross-session agent states.
+
+**🌐 Live Demo:** [https://github.com/khushhhhh/Omnisync-ai-agent](https://github.com/khushhhhh/Omnisync-ai-agent) (Deploying to Vercel soon)
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
