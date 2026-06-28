@@ -30,7 +30,7 @@ export function getOAuthClient() {
   }
 
   const { client_id, client_secret } = clientInfo;
-  const redirectUri = "http://localhost:3000/api/auth/callback/google";
+  const redirectUri = "http://localhost:3002/api/auth/callback/google";
 
   return new google.auth.OAuth2(client_id, client_secret, redirectUri);
 }
