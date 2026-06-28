@@ -5,7 +5,7 @@
     <strong>Agentic Executive OS for Cross-Platform Workflows</strong>
   </p>
   <p align="center">
-    <a href="https://omnisync-ai.vercel.app"><strong>View Live Demo →</strong></a>
+    <a href="https://omnisync-ai-agent.vercel.app"><strong>View Live Demo →</strong></a>
   </p>
 </div>
 

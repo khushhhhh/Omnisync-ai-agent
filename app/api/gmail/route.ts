@@ -5,7 +5,7 @@ import { synthesizeEmails } from "@/lib/ai-summarizer";
 
 export async function GET() {
   try {
-    let emails = [];
+    let emails: any[] = [];
     let authenticated = false;
     let authUrl = null;
 
