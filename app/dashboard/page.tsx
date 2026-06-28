@@ -72,6 +72,7 @@ function DashboardContent() {
 
   const searchParams = useSearchParams();
   const status = searchParams ? searchParams.get("status") : null;
+  const error = searchParams ? searchParams.get("error") : null;
 
   const [telegramConfigured, setTelegramConfigured] = useState(false);
 
@@ -405,6 +406,18 @@ function DashboardContent() {
           <span>{isRefreshing ? "Synchronizing Streams..." : "Refresh Live Streams"}</span>
         </button>
       </div>
+
+      {error === "gmail_credentials_missing" && (
+        <div className="flex items-start gap-3 p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 text-amber-300">
+          <HugeiconsIcon icon={AlertCircleIcon} size={18} className="shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <p className="text-sm font-bold text-amber-200">Missing Gmail OAuth Credentials</p>
+            <p className="text-xs leading-relaxed text-amber-300/80">
+              Google OAuth requires a <code className="bg-amber-500/20 px-1 py-0.5 rounded text-[10px] text-amber-400 font-mono">credentials.json</code> file in the project root. Please download it from your Google Cloud Console and place it in the root directory.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* 4-Column Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

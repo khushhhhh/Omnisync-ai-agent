@@ -18,7 +18,7 @@ export default function DashboardLayout({
 
       {/* Mobile Topbar */}
       <header className="lg:hidden h-16 border-b border-white/10 bg-slate-950/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40 w-full">
-        <a href="/dashboard" className="flex items-center gap-2 group">
+        <a href="/" className="flex items-center gap-2 group">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:scale-105 transition-transform duration-300">
             <Sparkles size={16} />
           </div>

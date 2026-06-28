@@ -15,7 +15,7 @@ import {
 export default function IntegrationsDock() {
   // Client-side connection states (zero backend API calls)
   const [connections, setConnections] = useState<Record<string, boolean>>({
-    whatsapp: true, // Mock WhatsApp as connected initially
+    whatsapp: false,
     telegram: false,
     gmail: false,
     outlook: false,

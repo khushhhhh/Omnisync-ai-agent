@@ -50,7 +50,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="space-y-8 w-full">
           {/* Logo & Close Button (Mobile Only) */}
           <div className="flex items-center justify-between">
-            <Link href="/dashboard" className="flex items-center gap-2 group" onClick={onClose}>
+            <Link href="/" className="flex items-center gap-2 group" onClick={onClose}>
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:scale-105 transition-transform duration-300">
                 <Sparkles size={18} />
               </div>
