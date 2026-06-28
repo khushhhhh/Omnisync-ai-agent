@@ -16,7 +16,7 @@ export async function fetchTelegramTasks(
   botToken: string,
   lastUpdateId = 0
 ): Promise<TelegramSyncResult> {
-  if (!botToken || botToken === "placeholder") {
+  if (!botToken || botToken === "placeholder" || botToken === "your_telegram_bot_token_here") {
     console.warn("No bot token provided.");
     return { highestUpdateId: lastUpdateId, tasks: [] };
   }

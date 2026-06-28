@@ -73,10 +73,53 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   const status = searchParams ? searchParams.get("status") : null;
 
-  // Fetch Telegram sync updates (Disabled via Kill Switch)
+  const [telegramConfigured, setTelegramConfigured] = useState(false);
+
+  // Fetch Telegram sync updates
   const fetchTelegram = async (showSyncState = false) => {
-    setLoadingTasks(false);
-    setIsSyncingTelegram(false);
+    if (showSyncState) {
+      setIsSyncingTelegram(true);
+    }
+    setLoadingTasks(true);
+    try {
+      const res = await fetch("/api/telegram/sync");
+      if (!res.ok) throw new Error("Failed to fetch Telegram tasks");
+      const data = await res.json();
+      setTelegramConfigured(!!data.isConfigured);
+      if (data.tasks) {
+        setTasks(prev => {
+          const filtered = prev.filter(t => !t.id.startsWith("telegram-task-") && !t.id.startsWith("tg-"));
+          const mapped = data.tasks.map((t: any) => {
+            let priority: "High" | "Medium" | "Low" = "Low";
+            let importance: "Priority" | "Important" | "Normal" = "Normal";
+
+            if (t.priority === "URGENT") {
+              priority = "High";
+              importance = "Priority";
+            } else if (t.priority === "HIGH") {
+              priority = "Medium";
+              importance = "Important";
+            }
+
+            return {
+              id: t.id.startsWith("telegram-task-") || t.id.startsWith("tg-") ? t.id : `telegram-task-${t.id}`,
+              task: t.title,
+              source: "telegram" as const,
+              done: false,
+              priority,
+              importance,
+              details: t.summary,
+            };
+          });
+          return [...mapped, ...filtered];
+        });
+      }
+    } catch (err) {
+      console.error("Failed to sync Telegram updates:", err);
+    } finally {
+      setLoadingTasks(false);
+      setIsSyncingTelegram(false);
+    }
   };
 
   // Fetch calendar collisions
@@ -366,7 +409,7 @@ function DashboardContent() {
       {/* 4-Column Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         
-        {/* Column 1: Action Items (Telegram - Offline Placeholder) */}
+        {/* Column 1: Action Items (Telegram) */}
         <div className="bg-slate-900/40 backdrop-blur-md border border-white/5 hover:border-emerald-500/10 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between min-h-[480px]">
           <div className="space-y-4 flex-1 flex flex-col justify-between">
             <div className="space-y-4">
@@ -375,66 +418,75 @@ function DashboardContent() {
                   <HugeiconsIcon icon={TelegramIcon} size={16} className="text-slate-400" />
                   Telegram Actions
                 </h3>
-                <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-rose-500/20 bg-rose-500/5 text-[9px] font-bold uppercase tracking-widest text-rose-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                  Offline
-                </span>
+                {telegramConfigured ? (
+                  <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-[9px] font-bold uppercase tracking-widest text-emerald-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Connected
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-rose-500/20 bg-rose-500/5 text-[9px] font-bold uppercase tracking-widest text-rose-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+                    Offline
+                  </span>
+                )}
               </div>
 
               <div className="space-y-3 max-h-[280px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/10">
-                {/* Static Placeholder Tasks */}
-                <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-white/5 bg-slate-950/20 opacity-60">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="h-4.5 w-4.5 rounded border border-white/10 flex items-center justify-center shrink-0">
-                      <HugeiconsIcon icon={TickDouble02Icon} size={8} className="text-slate-600" />
-                    </div>
-                    <span className="text-xs text-slate-400 font-medium truncate">
-                      Sync production cluster alerts
+                {activeTasks.filter(t => t.source === "telegram").length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-center gap-2 text-slate-500">
+                    <span className="text-xs">No active Telegram tasks.</span>
+                    <span className="text-[10px] text-slate-600 leading-normal max-w-[150px]">
+                      Send messages to your bot or click Sync to fetch updates.
                     </span>
                   </div>
-                  <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                    Priority
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-white/5 bg-slate-950/20 opacity-60">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="h-4.5 w-4.5 rounded border border-white/10 flex items-center justify-center shrink-0">
-                      <HugeiconsIcon icon={TickDouble02Icon} size={8} className="text-slate-600" />
+                ) : (
+                  activeTasks.filter(t => t.source === "telegram").map((t) => (
+                    <div 
+                      key={t.id} 
+                      onClick={() => setSelectedTask(t)}
+                      className="flex items-center justify-between gap-3 p-3 rounded-xl border border-white/5 bg-slate-950/20 hover:bg-slate-950/40 hover:border-emerald-500/20 cursor-pointer transition-all duration-200"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCheckboxClick(t.id);
+                          }}
+                          className="h-4.5 w-4.5 rounded border border-white/15 flex items-center justify-center shrink-0 hover:border-emerald-400 transition-colors"
+                        >
+                          {animatingOut.includes(t.id) && (
+                            <div className="h-2.5 w-2.5 rounded bg-emerald-500 animate-ping" />
+                          )}
+                        </div>
+                        <span className="text-xs text-slate-200 font-medium truncate">
+                          {t.task}
+                        </span>
+                      </div>
+                      <span className={`text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
+                        t.importance === "Priority" ? "bg-rose-500/10 text-rose-400 border border-rose-500/20" :
+                        t.importance === "Important" ? "bg-sky-500/10 text-sky-400 border border-sky-500/20" :
+                        "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                      }`}>
+                        {t.importance}
+                      </span>
                     </div>
-                    <span className="text-xs text-slate-400 font-medium truncate">
-                      Draft follow-up report for stakeholders
-                    </span>
-                  </div>
-                  <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                    Important
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 p-3 rounded-xl border border-white/5 bg-slate-950/20 opacity-60">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="h-4.5 w-4.5 rounded border border-white/10 flex items-center justify-center shrink-0">
-                      <HugeiconsIcon icon={TickDouble02Icon} size={8} className="text-slate-600" />
-                    </div>
-                    <span className="text-xs text-slate-400 font-medium truncate">
-                      Backup configuration profiles
-                    </span>
-                  </div>
-                  <span className="text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    Normal
-                  </span>
-                </div>
+                  ))
+                )}
               </div>
             </div>
 
             <div className="pt-4 border-t border-white/5 space-y-3">
               <p className="text-[10px] text-slate-500 leading-normal">
-                Polling disabled. Scan terminal QR code or re-initialize core connection to activate.
+                {telegramConfigured 
+                  ? "Real-time updates active. Pull down or click below to manually force sync."
+                  : "Webhook polling inactive. Make sure TELEGRAM_BOT_TOKEN is set in your .env configuration."}
               </p>
               <button 
-                className="w-full py-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 active:scale-95 text-emerald-400 hover:text-emerald-300 font-semibold text-xs tracking-wide transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5"
+                onClick={() => fetchTelegram(true)}
+                disabled={isSyncingTelegram}
+                className="w-full py-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 active:scale-95 text-emerald-400 hover:text-emerald-300 font-semibold text-xs tracking-wide transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
-                <span>Connect Telegram</span>
+                <span>{isSyncingTelegram ? "Syncing..." : "Sync Telegram Updates"}</span>
               </button>
             </div>
           </div>

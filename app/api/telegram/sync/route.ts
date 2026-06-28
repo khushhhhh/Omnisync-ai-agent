@@ -25,7 +25,7 @@ export async function GET() {
     }
 
     // Determine if the environment variable is configured (non-placeholder)
-    const isConfigured = !!process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_BOT_TOKEN !== "placeholder";
+    const isConfigured = !!process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_BOT_TOKEN !== "placeholder" && process.env.TELEGRAM_BOT_TOKEN !== "your_telegram_bot_token_here";
 
     return NextResponse.json({
       tasks: syncResult.tasks,
