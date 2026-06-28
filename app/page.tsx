@@ -1,6 +1,9 @@
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import BentoGrid from "@/components/landing/BentoGrid";
+import Features from "@/components/landing/Features";
+import Workflow from "@/components/landing/Workflow";
+import Pricing from "@/components/landing/Pricing";
 import Footer from "@/components/landing/Footer";
 
 export default function Home() {
@@ -9,9 +12,12 @@ export default function Home() {
       <Navbar />
       <main className="flex-1 flex flex-col w-full">
         <Hero />
+        <Features />
         <div id="integrations">
           <BentoGrid />
         </div>
+        <Workflow />
+        <Pricing />
       </main>
       <Footer />
     </div>
